@@ -5,7 +5,7 @@ import os
 import numpy as np
 import pandas as pd
 from rdkit import Chem, DataStructs
-from rdkit.Chem import AllChem, rdFingerprintGenerator, Draw
+from rdkit.Chem import AllChem, rdFingerprintGenerator
 import streamlit as st
 from typing import Optional, List, Tuple
 
@@ -62,6 +62,10 @@ def find_similar_molecules(
 
 def draw_molecule(smiles: str, size: Tuple[int, int] = (400, 300)):
     """Draw a molecule structure as an image."""
+    try:
+        from rdkit.Chem import Draw
+    except ImportError:
+        return None
     mol = Chem.MolFromSmiles(smiles)
     if mol is None:
         return None
