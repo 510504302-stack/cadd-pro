@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# User data / Projects (contain user-specific data, not for deployment)
+projects/
+
+# Temp files
+temp_repo/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Streamlit
+.streamlit/secrets.toml
