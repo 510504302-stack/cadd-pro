@@ -6,7 +6,7 @@ import pandas as pd, numpy as np, glob, os, sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from utils.ui_utils import inject_css, render_sidebar, render_footer, render_page_header
-from utils.chem_utils import mol_to_fp, is_valid_smiles, find_similar_molecules, draw_molecule
+from utils.chem_utils import mol_to_fp, is_valid_smiles, find_similar_molecules, draw_molecule, show_molecule
 from utils.viz_utils import plot_similarity_heatmap
 
 st.set_page_config(page_title="相似性搜索 | CADD-Pro", page_icon="🔍", layout="wide")
@@ -49,7 +49,10 @@ if mode == "✏️ SMILES":
     smi = st.text_input("SMILES", "CC(C)CC1=CC=C(C=C1)C(C)C(=O)O")
     if smi and is_valid_smiles(smi):
         img = draw_molecule(smi, (350, 250))
-        if img: st.image(img, width=300)
+        if img:
+            st.image(img, width=300)
+        else:
+            show_molecule(smi, 300, 250, "分子结构")
         queries = [smi]
 elif mode == "📋 从库中选择":
     sample = ref_df[smiles_col].dropna().head(100).tolist()
@@ -87,7 +90,10 @@ if queries and st.button("🔍 搜索", use_container_width=True, type="primary"
             for i, (smi, sim) in enumerate(results[:5]):
                 with gcols[i]:
                     img = draw_molecule(smi, (160, 130))
-                    if img: st.image(img, caption=f"Sim:{sim:.3f}", use_container_width=True)
+                    if img:
+                        st.image(img, caption=f"Sim:{sim:.3f}", use_container_width=True)
+                    else:
+                        show_molecule(smi, 140, 120, f"Sim:{sim:.3f}")
             st.download_button("📥 下载CSV", rdf.to_csv(index=False).encode('utf-8'), f"similarity_{qi+1}.csv", "text/csv", use_container_width=True)
         else:
             st.warning("未找到相似分子。")

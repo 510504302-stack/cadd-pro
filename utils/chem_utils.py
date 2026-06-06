@@ -73,6 +73,66 @@ def draw_molecule(smiles: str, size: Tuple[int, int] = (400, 300)):
     return Draw.MolToImage(mol, size=size)
 
 
+def show_molecule(smiles: str, width: int = 350, height: int = 250, caption: str = "分子结构"):
+    """Render a molecule using JavaScript SmilesDrawer (works without RDKit Draw)."""
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        st.warning("无效的 SMILES")
+        return
+
+    # Generate canonical SMILES for consistent rendering
+    canonical_smi = Chem.MolToSmiles(mol, canonical=True)
+
+    html_code = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <script src="https://unpkg.com/smiles-drawer@2.0.3/dist/smiles-drawer.min.js"></script>
+        <style>
+            body {{ margin: 0; display: flex; justify-content: center; align-items: center; background: transparent; }}
+            canvas {{ display: block; }}
+        </style>
+    </head>
+    <body>
+        <canvas id="mol-canvas"></canvas>
+        <script>
+            (function() {{
+                let smiles = "{canonical_smi}";
+                let options = {{
+                    width: {width},
+                    height: {height},
+                    bondThickness: 2.0,
+                    bondLength: 20.0,
+                    shortBondLength: 0.85,
+                    bondSpacing: 0.18 * 20.0,
+                    atomVisualization: 'default',
+                    isomeric: true,
+                    debug: false,
+                    terminalCarbons: true,
+                    explicitHydrogens: false,
+                    overlapSensitivity: 0.42,
+                    overlapResolutionIterations: 1,
+                    compactDrawing: true,
+                    fontFamily: 'Arial, sans-serif',
+                    fontSizeLarge: 11,
+                    fontSizeSmall: 8,
+                    padding: 20.0,
+                }};
+                let canvas = document.getElementById('mol-canvas');
+                let drawer = new SmilesDrawer.Drawer(options);
+                SmilesDrawer.parse(smiles, function(tree) {{
+                    drawer.draw(tree, canvas, options);
+                }}, function(err) {{
+                    console.error(err);
+                }});
+            }})();
+        </script>
+    </body>
+    </html>
+    """
+    st.components.v1.html(html_code, height=height + 20, scrolling=False)
+
+
 def save_fingerprint_data(data: pd.DataFrame, project_dir: str, label_column: str) -> Optional[str]:
     """Save fingerprint features and labels to CSV for model training."""
     # Detect SMILES column

@@ -5,8 +5,6 @@ import os
 import joblib
 import numpy as np
 import pandas as pd
-import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.ensemble import RandomForestClassifier
@@ -242,13 +240,7 @@ def generate_evaluation_plots(metrics: Dict[str, Any], project_dir: str, X_colum
 
 def plot_style():
     """Set consistent matplotlib style."""
-    try:
-        plt.style.use('seaborn-v0_8-whitegrid')
-    except Exception:
-        try:
-            plt.style.use('seaborn-v0_8')
-        except Exception:
-            plt.style.use('ggplot')
+    plt.style.use('seaborn-v0_8-whitegrid')
     plt.rcParams.update({
         'font.size': 11,
         'axes.titlesize': 14,

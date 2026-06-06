@@ -3,13 +3,11 @@
 """
 import streamlit as st
 import pandas as pd, numpy as np, glob, os, sys, joblib, json
-import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt, shap
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from utils.ui_utils import inject_css, render_sidebar, render_footer, render_page_header
-from utils.chem_utils import mol_to_fp, is_valid_smiles, batch_predict, draw_molecule
+from utils.chem_utils import mol_to_fp, is_valid_smiles, batch_predict, draw_molecule, show_molecule
 
 st.set_page_config(page_title="活性预测 | CADD-Pro", page_icon="🔮", layout="wide")
 inject_css()
@@ -51,7 +49,10 @@ if pred_mode == "🎯 单分子预测":
     with c2:
         if smi and is_valid_smiles(smi):
             img = draw_molecule(smi, (350, 250))
-            if img: st.image(img, caption="分子结构", use_container_width=True)
+            if img:
+                st.image(img, caption="分子结构", use_container_width=True)
+            else:
+                show_molecule(smi, 350, 250, "分子结构")
 
     if btn and smi and is_valid_smiles(smi):
         with st.spinner("预测中..."):
