@@ -4,6 +4,8 @@
 import streamlit as st
 import pandas as pd, numpy as np, glob, os, sys, joblib, json, random, string
 from datetime import datetime
+import matplotlib
+matplotlib.use('Agg')
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 

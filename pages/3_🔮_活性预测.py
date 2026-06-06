@@ -3,6 +3,8 @@
 """
 import streamlit as st
 import pandas as pd, numpy as np, glob, os, sys, joblib, json
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt, shap
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
